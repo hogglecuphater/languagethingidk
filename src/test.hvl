@@ -1,0 +1,14 @@
+keywords:
+fn
+endfn
+let
+const
+call
+label
+jump
+
+types:
+i8,i16,i32,i64,i128
+u8,u16,u32,u64,u128
+bool
+ptr
