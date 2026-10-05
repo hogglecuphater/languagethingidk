@@ -9,31 +9,75 @@ enum KeyWord {
     Let,
     Const,
     Call,
+    Jmp,
+    Label,
 }
 
 #[derive(Debug, Clone, PartialEq)]
 enum Literal {
-    Str(String),
     I8(i8),
     I16(i16),
     I32(i32),
     I64(i64),
-    I128(i128),
     U8(u8),
     U16(u16),
     U32(u32),
     U64(u64),
-    U128(u128),
     F32(f32),
     F64(f64),
     US(usize),
     IS(isize),
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+enum Type {
+    I8,
+    I16,
+    I32,
+    I64,
+    U8,
+    U16,
+    U32,
+    U64,
+    F32,
+    F64,
+    US,
+    IS,
+    Ptr(Box<Type>),
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum Operator {
+    Add,
+    Sub,
+    Mul,
+    Div,
+    Mod,
+    And,
+    Or,
+    Xor,
+    Not,
+    As,
+    Deref,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum Symbol {
+    ParenOpen,
+    ParenClose,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+struct RegID(pub u64);
+
 #[derive(Debug, Clone, PartialEq)]
 enum Token {
     KeyWord(KeyWord),
     Literal(Literal),
+    Type(Type),
+    Operator(Operator),
+    Symbol(Symbol),
+    Register(RegID),
     EndLine,
 }
 
@@ -51,20 +95,20 @@ impl TokenObject {
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum TokenizationError {
-    InvalidKeyword,
+    InvalidKeyword(u64),
 }
 
 impl Display for TokenizationError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            InvalidKeyword => f.write_str("invalid keyword was found")
+            InvalidKeyword(line) => write!(f, "invalid keyword was found at line {line}")
         }
     }
 }
 
 impl Error for TokenizationError {}
 
-fn process_line(s: &str) -> Result<Vec<Token>, TokenizationError> {
+fn process_line(s: &str, line: u64) -> Result<Vec<Token>, TokenizationError> {
     let mut tokens = Vec::new();
     let mut current_token = String::new();
     let mut s_iter = s.chars().enumerate();
@@ -76,23 +120,43 @@ fn process_line(s: &str) -> Result<Vec<Token>, TokenizationError> {
                 "let" => Token::KeyWord(KeyWord::Let),
                 "const" => Token::KeyWord(KeyWord::Const),
                 "call" => Token::KeyWord(KeyWord::Call),
-                _ => return Err(TokenizationError::InvalidKeyword)
+                "jmp" => Token::KeyWord(KeyWord::Jmp),
+                "label" => Token::KeyWord(KeyWord::Label),
+                _ => return Err(TokenizationError::InvalidKeyword(line))
             };
             tokens.push(token);
             break;
         }
         current_token.push(c);
     }
-    let kw = match tokens.get(0).ok_or(TokenizationError::InvalidKeyword)? {
+    let kw = match tokens.get(0).ok_or(TokenizationError::InvalidKeyword(line))? {
         Token::KeyWord(kw) => kw,
-        _ => return Err(TokenizationError::InvalidKeyword),
+        _ => return Err(TokenizationError::InvalidKeyword(line)),
     };
     match kw {
-        KeyWord::Fn => {},
-        KeyWord::EndFn => {},
-        KeyWord::Let => {},
-        KeyWord::Const => {},
-        KeyWord::Call => {},
+        KeyWord::Fn => {
+            for (c, i) in s_iter {
+                if c ==
+            }
+        },
+        KeyWord::EndFn => {
+
+        },
+        KeyWord::Let => {
+
+        },
+        KeyWord::Const => {
+
+        },
+        KeyWord::Call => {
+
+        },
+        KeyWord::Jmp => {
+
+        },
+        KeyWord::Label => {
+
+        },
     }
     Ok(tokens)
 }
@@ -112,7 +176,7 @@ fn tokenize_from_str(s: &str) -> Result<Vec<TokenObject>, TokenizationError> {
                     "let" => Token::KeyWord(KeyWord::Let),
                     "const" => Token::KeyWord(KeyWord::Const),
                     "call" => Token::KeyWord(KeyWord::Call),
-                    _ => return Err(TokenizationError::InvalidKeyword)
+                    _ => return Err(TokenizationError::InvalidKeyword(li as u64))
                 };
                 skip_amount = i;
                 current_line.push(token);

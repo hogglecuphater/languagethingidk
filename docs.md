@@ -56,12 +56,12 @@ endfn (1)
 call my_fn
 
 ; fn call with arguments
-let i32 my_reg (2)
+let my_reg (i32 2)
 call my_arg_fn my_reg
 
 ; Using a function return value
 call my_returning_fn : new_vreg_name
-let i32 reg3 (new_vreg_name + 2)
+let reg3 (i32 new_vreg_name + 2)
 
 ; Calling a returning function and not using return value
 call my_returning_fn : _
@@ -71,10 +71,10 @@ call my_returning_fn : _
 `label` is used to define a spot that can be jumped to.
 
 ## Jump
-`jmp` is used to jump to a label. Its usage is as follows
+`jmp` is used to jump to a label. Jumping requires a boolean value. If you want an unconditional jump, you can just make that value always true. Its usage is as follows
 
 ```
-let bool my_boolean (0 == 0)
+let my_boolean (bool 0 == 0)
 
 jmp my_boolean option_one
 label option_one
@@ -100,7 +100,7 @@ Unsigned integer types include types `u8`, `u16`, `u32`, `u64`, and `usize`. All
 Floats include types `f32` and `f64`. All float types can be can be cast to signed and unsigned integer types, aswell as other sizes of float types. Note that casting a float to an integer is a truncating operation that will loose data after the decimal place.
 
 ## Boolean Type
-`bool` is the boolean type. It can be assigned via `true` and `false`.
+`bool` is the boolean type. It can be assigned via `true` and `false` values.
 
 ## Pointer
 `ptr` is the pointer type. It is used as `ptr type`. e.g. `ptr i32`. `ptr` can be cast into `usize`
@@ -125,6 +125,18 @@ The `/` operand is used to divide two numbers. It can be used between any two un
 
 ## Mod
 The `%` operand is used to get the remainder of division of two numbers. It can be used between any two unsigned or signed integer types. `%` is used like `(my_reg % my_2nd_reg)`
+
+## And
+The `&` operator is the and operator. It can be used on signed and unsigned integers to act as a bitwise and, or it can be used on a boolean value to act as a logical and.
+
+## Or
+The `|` operator is the or operator. It can be used on signed and unsigned integers to act as a bitwise or, or it can be used on a boolean value to act as a logical or. 
+
+## Xor
+The `^` operator is the xor operator. It can be used on signed and unsigned integers to act as a bitwise xor.
+
+## Not
+The `!` operator is the not operator. It can be used on signed and unsigned integers to act as a bitwise not, or it can be used on a boolean value to act as a logical not. 
 
 ## As
 The `as` operand is used to cast a type to another type. What types can be cast to what can be seen in the **Types** section.

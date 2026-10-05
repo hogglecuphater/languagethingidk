@@ -1,0 +1,36 @@
+types:
+i8, i16, i32, i64
+u8, u16, u32, u64
+bool,
+ptr
+
+ptr works as compound type so it works as ptr followed by another type, to denote a ptr to that type.
+
+operators:
+all operators work once per register creation. 
+
+add (+) - adds two floats or ints
+sub (-) - subs two floats or ints
+mul (*) - multiplies two floats or ints
+div (/) - divides two floats or ints
+Mod (%) - runs modulus on two floats or ints
+And (&) - Bitwise and on ints and logical and on bools
+Or (|) - Bitwise or on ints and logical or on bools
+Xor (^) - Bitwise xor on ints and logical xor on bools
+Not (!) - Bitwise not on ints and logical not on bools
+Equal (==) - Determins if types have exact equal bits
+NotEqual (!=) - Determins if types do not have exact equal bits
+LessThan (<) - Determins if an int or float is less than another int or float
+GreaterThan (>) - Determins if an int or float is greater than another int or float
+LessThanEqual (<=)- Determins if an int or float is less than or equal to another int or float
+GreaterThanEqual (>=) - Determins if an int or float is greater than or equal to another int or float
+As (as) - cast a register of one type to another type.
+Deref (#) - gets the value stored at an adress. works only on pointer type.
+
+most operations will occur with the syntax (i32 5+2), where the return type and values all have the same type.
+some however will use the (bool:i32 5==4) syntax, for any operation where the values and final type of the register will not 
+be the same.
+
+vregs:
+a virtual register is created whenever a single operation or value is put inside ().
+
