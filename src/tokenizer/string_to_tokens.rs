@@ -63,8 +63,8 @@ enum Operator {
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum Symbol {
-    ParenOpen,
-    ParenClose,
+    Equal,
+    EndLine,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -78,7 +78,6 @@ enum Token {
     Operator(Operator),
     Symbol(Symbol),
     Register(RegID),
-    EndLine,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -108,83 +107,21 @@ impl Display for TokenizationError {
 
 impl Error for TokenizationError {}
 
-fn process_line(s: &str, line: u64) -> Result<Vec<Token>, TokenizationError> {
+fn tokenize_to_str(s: String) -> Vec<String> {
     let mut tokens = Vec::new();
+
     let mut current_token = String::new();
-    let mut s_iter = s.chars().enumerate();
-    for (i, c) in s_iter {
-        if c.is_whitespace() {
-            let token = match current_token.as_str() {
-                "fn" => Token::KeyWord(KeyWord::Fn),
-                "endfn" => Token::KeyWord(KeyWord::EndFn),
-                "let" => Token::KeyWord(KeyWord::Let),
-                "const" => Token::KeyWord(KeyWord::Const),
-                "call" => Token::KeyWord(KeyWord::Call),
-                "jmp" => Token::KeyWord(KeyWord::Jmp),
-                "label" => Token::KeyWord(KeyWord::Label),
-                _ => return Err(TokenizationError::InvalidKeyword(line))
-            };
-            tokens.push(token);
-            break;
-        }
-        current_token.push(c);
-    }
-    let kw = match tokens.get(0).ok_or(TokenizationError::InvalidKeyword(line))? {
-        Token::KeyWord(kw) => kw,
-        _ => return Err(TokenizationError::InvalidKeyword(line)),
-    };
-    match kw {
-        KeyWord::Fn => {
-            for (c, i) in s_iter {
-                if c ==
+    for c in s.chars() {
+        if c == ' ' {
+            if !tokens.is_empty() {
+                tokens.push(current_token);
+                current_token = String::new();
             }
-        },
-        KeyWord::EndFn => {
-
-        },
-        KeyWord::Let => {
-
-        },
-        KeyWord::Const => {
-
-        },
-        KeyWord::Call => {
-
-        },
-        KeyWord::Jmp => {
-
-        },
-        KeyWord::Label => {
-
-        },
-    }
-    Ok(tokens)
-}
-
-fn tokenize_from_str(s: &str) -> Result<Vec<TokenObject>, TokenizationError> {
-    let mut tokens = Vec::new();
-
-    for (li, line) in s.lines().enumerate() {
-        let mut skip_amount = 0;
-        let mut current_line = Vec::new();
-        let mut current_token = String::new();
-        for (i, kwc) in line.chars().enumerate() {
-            if kwc.is_whitespace() {
-                let token = match current_token.as_str() {
-                    "fn" => Token::KeyWord(KeyWord::Fn),
-                    "endfn" => Token::KeyWord(KeyWord::EndFn),
-                    "let" => Token::KeyWord(KeyWord::Let),
-                    "const" => Token::KeyWord(KeyWord::Const),
-                    "call" => Token::KeyWord(KeyWord::Call),
-                    _ => return Err(TokenizationError::InvalidKeyword(li as u64))
-                };
-                skip_amount = i;
-                current_line.push(token);
-                break;
+            else if {
+                
             }
-            current_token.push(kwc);
         }
     }
 
-    Ok(tokens)
+    tokens
 }
