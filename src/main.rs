@@ -2,6 +2,8 @@ mod tokenizer;
 
 use std::fs;
 
+use crate::tokenizer::parser::parse;
+
 fn main() {
     let content_bytes = match fs::read("src/test.hvl") {
         Ok(v) => v,
@@ -13,5 +15,7 @@ fn main() {
         Err(_) => {eprintln!("File was not valid UTF8"); return}
     };
 
-    println!("{content}");
+    let str_tokens = parse(content);
+
+    println!("{content}\n{str_tokens:?}");
 }
