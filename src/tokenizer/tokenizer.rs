@@ -3,7 +3,7 @@ use std::{error::Error, fmt::Display};
 use crate::tokenizer::Line;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum KeyWords {
+pub enum KeyWord {
     Fn,
     Ret,
     Call,
@@ -12,8 +12,10 @@ pub enum KeyWords {
     Store,
 }
 
-pub enum Operations {
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Operation {
     Keep,
+    CurrentLable,
 
     Add,
     Sub,
@@ -31,6 +33,7 @@ pub enum Operations {
     Xor,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Type {
     Bool,
     U8,
@@ -45,13 +48,41 @@ pub enum Type {
     I128,
     F32,
     F64,
-    TypeLiteral,
+    Executable,
     Ptr(Box<Type>),
+}
+
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum Literal {
+    Bool(bool),
+    U8(u8),
+    U16(u16),
+    U32(u32),
+    U64(u64),
+    U128(u128),
+    I8(i8),
+    I16(i16),
+    I32(i32),
+    I64(i64),
+    I128(i128),
+    F32(f32),
+    F64(f64),
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Symbol {
+    EndLine,
+    Equals,
 }
 
 #[derive(Debug, PartialEq, Clone)]
 pub enum Token {
-    Keyword(KeyWords)
+    Keyword(KeyWord),
+    Operation(Operation),
+    Type(Type),
+    Literal(Literal),
+    Symbol(Symbol),
+    Reg(String),
 }
 
 
@@ -73,6 +104,10 @@ impl Error for TokenizeError {}
 
 pub fn generate_tokens(str_tokens: Vec<(String, Line)>) -> Result<Vec<(Token, Line)>, TokenizeError> {
     let tokens = Vec::new();
+
+    for (s, l) in str_tokens {
+
+    }
 
     Ok(tokens)
 }
