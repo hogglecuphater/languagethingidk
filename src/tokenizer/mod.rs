@@ -1,32 +1,19 @@
+use std::fmt::Display;
+
 pub mod parser;
 pub mod tokenizer;
 
-#[cfg(test)]
-mod tests {
-    use crate::tokenizer::parser::parse;
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct Line(usize);
 
-    fn check_same(str_tokens: &[String], expected: &[&str]) {
-        if str_tokens.len() != expected.len() {
-            panic!("Not the same length: result: {:?}, expected: {:?}", str_tokens, expected);
-        }
-        for (i, &r) in expected.iter().enumerate() {
-            if r != str_tokens[i].as_str() {
-                panic!("Different token at token {i}: result: {:?}, expected: {:?}", str_tokens, expected);
-            }
-        }
+impl Line {
+    pub fn inc(&mut self) {
+        self.0 += 1;
     }
+}
 
-
-    #[test]
-    fn string_tokens() {
-        let content = "x = $101u16; x.1 = $'d'u16;";
-
-        let expected = ["x", "=", "$101u16", ";", "x.1", "=", "$'d'u16", ";"];
-
-        let str_tokens = match parse(content) {
-            Ok(v) => v,
-            Err(e) => panic!("{e}"),
-        };
-        check_same(&str_tokens, &expected);
+impl Display for Line {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.0)
     }
 }

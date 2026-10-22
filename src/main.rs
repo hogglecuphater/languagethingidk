@@ -15,7 +15,10 @@ fn main() {
         Err(_) => {eprintln!("File was not valid UTF8"); return}
     };
 
-    let str_tokens = parse(content);
+    let str_tokens = match parse(content) {
+        Ok(v) => v,
+        Err(e) => {eprintln!("Error parsing input: {e}"); return},
+    };
 
     println!("{content}\n{str_tokens:?}");
 }

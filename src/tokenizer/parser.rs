@@ -1,5 +1,7 @@
 use std::{error::Error, fmt::Display};
 
+use crate::tokenizer::Line;
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ParseError {
     NonAsciiContent
@@ -15,10 +17,10 @@ impl Display for ParseError {
 
 impl Error for ParseError {}
 
-pub fn parse(s: &str) -> Result<Vec<String>, ParseError> {
+pub fn parse(s: &str) -> Result<Vec<(String, Line)>, ParseError> {
     let mut tokens = Vec::new();
 
-    let mut _line: usize = 1;
+    let mut line: Line = Line(1);
 
     let mut current_token = String::new();
 
@@ -28,25 +30,28 @@ pub fn parse(s: &str) -> Result<Vec<String>, ParseError> {
 
     for b in s.bytes() {
         let c = b as char;
-        if c == ' ' {
+        if c == '\n' {
+            line.inc();
+        }
+        if c.is_whitespace() {
             if !current_token.is_empty() {
-                tokens.push(current_token);
+                tokens.push((current_token, line));
                 current_token = String::new();
             }
         }
         else if !c.is_ascii_alphanumeric() && c != '_' && c != '$' && c != '.' && c != '\'' {
             if !current_token.is_empty() {
-                tokens.push(current_token);
+                tokens.push((current_token, line));
                 current_token = String::new();
             }
-            tokens.push(c.to_string());
+            tokens.push((c.to_string(), line));
         }
         else {
             current_token.push(c);
         }
     }
     if !current_token.is_empty() {
-        tokens.push(current_token);
+        tokens.push((current_token, line));
     }
 
     Ok(tokens)
