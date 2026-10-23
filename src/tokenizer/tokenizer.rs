@@ -72,7 +72,7 @@ pub enum Literal {
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Symbol {
     EndLine,
-    Equals,
+    Equal,
 }
 
 #[derive(Debug, PartialEq, Clone)]
@@ -82,7 +82,8 @@ pub enum Token {
     Type(Type),
     Literal(Literal),
     Symbol(Symbol),
-    Reg(String),
+    VReg(String),
+    FunctionName(String),
 }
 
 
@@ -103,10 +104,19 @@ impl Display for TokenizeError {
 impl Error for TokenizeError {}
 
 pub fn generate_tokens(str_tokens: Vec<(String, Line)>) -> Result<Vec<(Token, Line)>, TokenizeError> {
-    let tokens = Vec::new();
+    let mut tokens = Vec::new();
 
     for (s, l) in str_tokens {
-
+        // Keywords
+        if match s.as_str() {
+            "fn" => {tokens.push((Token::Keyword(KeyWord::Fn), l)); true},
+            "ret" => {tokens.push((Token::Keyword(KeyWord::Ret), l)); true},
+            "call" => {tokens.push((Token::Keyword(KeyWord::Call), l)); true},
+            "push" => {tokens.push((Token::Keyword(KeyWord::Push), l)); true},
+            "load" => {tokens.push((Token::Keyword(KeyWord::Load), l)); true},
+            "store" => {tokens.push((Token::Keyword(KeyWord::Store), l)); true},
+            _ => false,
+        } {}
     }
 
     Ok(tokens)

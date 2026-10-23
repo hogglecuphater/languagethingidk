@@ -5,3 +5,7 @@ version = 4
 [[package]]
 name = "languagethingidk"
 version = "0.1.0"
+
+[[package]]
+name = "tokenizer"
+version = "0.1.0"
