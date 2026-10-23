@@ -2,7 +2,7 @@ mod tokenizer;
 
 use std::fs;
 
-use crate::tokenizer::parser::parse;
+use crate::tokenizerlexer::parser::parse;
 
 fn main() {
     let content_bytes = match fs::read("src/test.hvl") {
